@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_chart_of_account_hierarchy_chart_of_account_hierarchy,chart_of_account_hierarchy.chart_of_account_hierarchy,model_chart_of_account_hierarchy_chart_of_account_hierarchy,,1,0,0,0

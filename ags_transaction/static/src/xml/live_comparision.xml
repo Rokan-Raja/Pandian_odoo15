@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="live_view_screen">
+	    <div class="o_live_screen_container">
+		    <header class="topheader">
+		      <t t-if ="!toggle">
+		        <span class="remove_zero" style="position:relative;left:2%;">
+			        <button class='btn btn-primary btn-sm remove_zero_value'>Remove Zero Valued</button>
+			      </span>
+		      </t>
+			    <span id="o_main_title" class="o_main_title" style="left:8%;">Bill Vs Transaction Reconciliation - 
+				    <t t-if="title">
+					    <t t-esc="title"/></t>
+			    </span>
+			    <t t-if ="!toggle">
+				    <span class="start_compare" style="position:relative;left:10%;">
+					    <button class='btn btn-primary btn-sm compare'>Compare</button>
+				    </span>
+			      <span class="removeallmatch" style="position:relative;left:12%;">
+			        <button class='btn btn-primary btn-sm remove_all_match'>Remove All Matching</button>
+			      </span>
+			    </t>
+			    <t t-if="toggle">
+				    <span class="toggle">
+					    <label class="switch">
+						    <input type="checkbox" id="togBtn" checked="True"/>
+						    <div class="slider round">
+							    <!--ADDED HTML -->
+							    <span class="on">ON</span>
+							    <span class="off">OFF</span>
+							    <!--END-->
+						    </div>
+					    </label>
+				    </span>
+			    </t>
+		    </header>
+		    <div class="o_data_container">
+			    <div class="popup-overlay" id="dialog" role="dialog" style="display:none">
+				    <div class="popup-content">
+					    <h2>Manual Match</h2>
+					    <!--popup's close button-->
+					    <button class="close">Close</button>
+				    </div>
+			    </div>
+			    <div class="o_container">
+				    <span class="o_column_title" id="tit">Bills</span>
+				    <div class="o_kanban_counter">
+					    <div class="o_kanban_counter_progress progress"></div>
+					    <div class="o_kanban_counter_side">
+						    <span class="bill_tot">
+							    <b>
+								    <t t-if="bill_tot">
+									    <t t-esc="bill_tot['bill_tot']"/></t>
+							    </b>
+						    </span>
+						    <span>₹</span>
+					    </div>
+				    </div>
+				    <div class="bill_details_container">
+					    <t t-if="bills">
+						    <t t-foreach='bills' t-as='bill'>
+						      <t t-set="match_ref" t-value="bill['no']+bill['id']"/>
+							    <div class="oe_bill_data" t-att-data-id="bill['no']" t-att-data-line-id="bill['id']" t-att-data-match-ref="match_ref">
+								    <div class="oe_bill">
+									    <div class="oe_bill_details">
+										    <div class="head">
+											    <span class="fix">
+												    <t t-esc="bill['no']"/>
+											    </span>
+											    <span class="fix">
+												    <i class='fa fa-clock-o'></i>
+												    <t t-esc="bill['date']"/>
+												    <t t-if="allow">
+													    <a>
+														    <i id="manual_match" class="fa fa-plus"></i>
+													    </a>
+												    </t>
+												    <!--<div class="placeholder-ManualMatchWidget"></div>-->
+											    </span>
+										    </div>
+										    <div class="head">
+											    <span class="fix">
+												    <t t-esc="bill['prod']"/>
+											    </span>
+											    <span class="badge" modifiers="{}">
+												    <i class="fa fa-money" modifiers="{}"></i>
+												    <span class="amt">
+													    <t t-esc="bill['amt']"/>
+												    </span>
+											    </span>
+										    </div>
+										    <div class="head">
+											    <span class="fix">
+												    <t t-esc="bill['qty']"/>
+											    </span>
+											    <span class="fix">
+												    <t t-esc="bill['salesman']"/>
+											    </span>
+										    </div>
+									    </div>
+								    </div>
+							    </div>
+						    </t>
+					    </t>
+				    </div>
+			    </div>
+			    <div class="o_container">
+				    <span class="o_column_title">Transactions</span>
+				    <div class="o_kanban_counter">
+					    <div class="o_kanban_counter_progress progress"></div>
+					    <div class="o_kanban_counter_side">
+						    <span class="trans_tot">
+							    <b>
+								    <t t-if="bill_tot">
+									    <t t-esc="trans_tot['trans_tot']"/></t>
+							    </b>
+						    </span>
+						    <span>₹</span>
+					    </div>
+				    </div>
+				    <div class="tran_details_container">
+					    <t t-if="trans">
+						    <t t-foreach='trans' t-as='tran'>
+							    <div class="oe_tran_data" t-att-data-id="tran['tid']">
+								    <div class="oe_tran">
+									    <div class="oe_bill_details">
+										    <div class="head">
+											    <span class="fix">
+												    <t t-esc="tran['tid']"/>
+											    </span>
+											    <span class="fix">
+												    <i class='fa fa-clock-o'></i>
+												    <t t-esc="tran['date']"/>
+											    </span>
+											    <t t-if="allow">
+												    <div class="o_dropdown_kanban dropdown">
+													    <a id="manual_option" class="dropdown-toggle btn" data-toggle="dropdown" href="#">
+														    <span class="fa fa-ellipsis-v" />
+													    </a>
+													    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+														    <li>
+															    <input class="credit" t-att-data-id="tran['tid']" type="checkbox" name="credit" value="Is Credit"/>
+															    <span  class="option_txt">Is Credit Transaction</span>
+														    </li>
+														    <li>
+															    <input class="card" t-att-data-id="tran['tid']" type="checkbox" name="card" value="Is Card" />
+															    <span  class="option_txt">Is Card Transaction</span>
+														    </li>
+														    <li>
+															    <input class="test" t-att-data-id="tran['tid']" type="checkbox" name="test" value="Is Test"/>
+															    <span  class="option_txt">Is Test Transaction</span>
+														    </li>
+														    <li>
+															    <input class="other" t-att-data-id="tran['tid']" type="checkbox" name="other" value="Other"/>
+															    <span  class="option_txt">Others</span>
+														    </li>
+													    </ul>
+												    </div>
+											    </t>
+											    <!--<div class="placeholder-ManualMatchWidget"></div>-->
+										    </div>
+										    <div class="head">
+											    <span class="fix">
+												    <t t-esc="tran['prod']"/>
+											    </span>
+											    <span class="badge" modifiers="{}">
+												    <i class="fa fa-money" modifiers="{}"></i>
+												    <span class="amt">
+													    <t t-esc="tran['amt']"/>
+												    </span>
+											    </span>
+										    </div>
+										    <div class="head">
+											    <span class="fix">
+												    <t t-esc="tran['qty']"/>
+											    </span>
+											    <span class="fix">Pump-
+												    <t t-esc="tran['pump']"/> , Nozzle-
+												    <t t-esc="tran['nozzle']"/>
+											    </span>
+										    </div>
+									    </div>
+								    </div>
+							    </div>
+						    </t>
+					    </t>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+    </t>
+
+	     
+    <t t-name="sample">
+	    <div class="sample_header" style="width:100%;height:50px;background-color:#fff;">
+		    <h2>Sample header</h2>
+	    </div>
+    </t>
+
+    <t t-name="bill_details">
+      <t t-set="match_ref" t-value="bill['no']+bill['id']"/>
+	    <div class="oe_bill_data" t-att-data-id="bill['no']" t-att-data-line-id="bill['id']" t-att-data-match-ref="match_ref" style="display: none;">
+		    <div class="oe_bill" >
+			    <div class="oe_bill_details">
+				    <div class="head">
+					    <span class="fix">
+						    <t t-esc="bill['no']"/>
+					    </span>
+					    <span class="fix">
+						    <i class='fa fa-clock-o'></i>
+						    <t t-esc="bill['date']"/>
+						    <t t-if="allow">
+							    <a>
+								    <i id="manual_match" class="fa fa-plus"></i>
+							    </a>
+						    </t>
+						    <!--<div class="placeholder-ManualMatchWidget"></div>-->
+					    </span>
+				    </div>
+				    <div class="head">
+					    <span class="fix">
+						    <t t-esc="bill['prod']"/>
+					    </span>
+					    <span class="badge" modifiers="{}">
+						    <i class="fa fa-money" modifiers="{}"></i>
+						    <span class="amt">
+							    <t t-esc="bill['amt']"/>
+						    </span>
+					    </span>
+				    </div>
+				    <div class="head">
+					    <span class="fix">
+						    <t t-esc="bill['qty']"/>
+					    </span>
+					    <span class="fix">
+						    <t t-esc="bill['salesman']"/>
+					    </span>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+    </t>
+
+    <t t-name='trans_details'>
+	    <div class="oe_tran_data" t-att-data-id="tran['tid']" style="display: none;">
+		    <div class="oe_tran">
+			    <div class="oe_bill_details">
+				    <div class="head">
+					    <span class="fix">
+						    <t t-esc="tran['tid']"/>
+					    </span>
+					    <span class="fix">
+						    <i class='fa fa-clock-o'></i>
+						    <t t-esc="tran['date']"/>
+					    </span>
+					    <t t-if="allow">
+						    <div class="o_dropdown_kanban dropdown">
+							    <a id="manual_option" class="dropdown-toggle btn" data-toggle="dropdown" href="#">
+								    <span class="fa fa-ellipsis-v" />
+							    </a>
+							    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+								    <li>
+									    <input class="credit" t-att-data-id="tran['tid']" type="checkbox" name="credit" value="Is Credit"/>
+									    <span  class="option_txt">Is Credit Transaction</span>
+								    </li>
+								    <li>
+									    <input class="card" t-att-data-id="tran['tid']" type="checkbox" name="card" value="Is Card" />
+									    <span  class="option_txt">Is Card Transaction</span>
+								    </li>
+								    <li>
+									    <input class="test" t-att-data-id="tran['tid']" type="checkbox" name="test" value="Is Test"/>
+									    <span  class="option_txt">Is Test Transaction</span>
+								    </li>
+								    <li>
+									    <input class="other" t-att-data-id="tran['tid']" type="checkbox" name="other" value="Other"/>
+									    <span  class="option_txt">Others</span>
+								    </li>
+							    </ul>
+						    </div>
+					    </t>
+				    </div>
+				    <div class="head">
+					    <span class="fix">
+						    <t t-esc="tran['prod']"/>
+					    </span>
+					    <span class="badge" modifiers="{}">
+						    <i class="fa fa-money" modifiers="{}"></i>
+						    <span class="amt">
+							    <t t-esc="tran['amt']"/>
+						    </span>
+					    </span>
+				    </div>
+				    <div class="head">
+					    <span class="fix">
+						    <t t-esc="tran['qty']"/>
+					    </span>
+					    <span class="fix">Pump-
+						    <t t-esc="tran['pump']"/> , Nozzle-
+						    <t t-esc="tran['nozzle']"/>
+					    </span>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+    </t>
+    <t t-name="TextInputPopupWidget">
+	    <div class="modal-dialog">
+		    <div class="popup popup-textinput">
+			    <p class="title">
+				    <t t-esc="title || '' " />
+			    </p>
+			    <input type='text' t-att-value="value || ''"></input>
+			    <div class="footer">
+				    <div class="button confirm">
+                            Ok 
+                        </div>
+				    <div class="button cancel">
+                            Cancel 
+                        </div>
+			    </div>
+		    </div>
+	    </div>
+    </t>
+    <t t-name="ManualMatchWidget">
+	    <div class="actionpad">
+		    <i id="manual_match" class="fa fa-plus"></i>
+	    </div>
+    </t>
+</templates>

@@ -1,0 +1,246 @@
+<odoo>
+  <data>
+    <record id="action_ags_transaction" model="ir.actions.act_window">
+      <field name="name">Transactions</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">ags_transaction.ags_transaction</field>
+        <field name="binding_view_types">form</field>
+      <field name="view_mode">tree,kanban,form</field>
+      <field name="view_id" eval="False"/>
+      <field name="domain">[]</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Click to create a new Transaction.
+        </p>
+        <p>
+          Use this menu to browse previous Transaction.
+        </p>
+      </field>
+    </record>
+    <record id="ags_transaction_form_view" model="ir.ui.view">
+      <field name="name">ags.transaction.form</field>
+      <field name="model">ags_transaction.ags_transaction</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <field name="state" widget="statusbar" statusbar_visible="new,pending,matched" nolabel="1"/>
+          </header>
+          <sheet>
+            <div class="oe_title">
+              <h1>
+                <field name="tran_id" string="Transaction Id" readonly="1"/>
+              </h1>
+              <div name="options">
+                <div>
+                  <field name="manual_match" readonly="1"/>
+                  <label for="manual_match" readonly="1"/>
+                  <field name="auto_match" readonly="1"/>
+                  <label for="auto_match" readonly="1"/>
+                  <field name="is_irregular_trans" readonly="1"/>
+                  <label for="is_irregular_trans" readonly="1"/>
+                </div>
+              </div>
+            </div>
+            <group>
+              <group string="Product Details">
+                <field name="product" string="Product" readonly="1"/>
+                <field name="volume" string="Volume" readonly="1"/>
+                <field name="amount" string="Amount" readonly="1"/>
+                <field name="netamount" string="Net Amount" readonly="1"/>
+                <field name="transaction_date" string="Date" readonly="1"/>
+                <field name="mop_type" strin="MOP Type" readonly="1"/>
+              </group>
+              <group string="Dispenser Details">
+                <field name="pump" string="Pump" readonly="1"/>
+                <field name="nozzle" string="Nozzle" readonly="1"/>
+                <field name="create_date" string="Created Date" readonly="1"/>
+                <field name="start_tot" readonly="1"/>
+                <field name="end_tot" readonly="1"/>
+              </group>
+            </group>
+            <group string="Matched Bill Details" colspan="4" col="4">
+              <field name="trans_type" widget="radio" string="Transaction Type" attrs="{'invisible': [('manual_match', '=', False)]}" readonly="1"/>
+              <field name='state' readonly="1"/>
+              <field name="order_relation" string="Matched Bill" attrs="{'readonly': [('trans_type', '=', 'credit')]}"/>
+              <field name="order_line_relation" string="Matched Bill Line" attrs="{'readonly': [('trans_type', '=', 'credit')]}"/>
+              <field name="order_date" string="Matched Bill Date" readonly="1"/>
+              <field name="bill_amt" string="Billed Amount" readonly="1"/>
+              <field name="responsible_person" string="Responsible person for mismatch" readonly="1"/>
+              <field name="bill_no" string="Bill Number" readonly="1"/>
+              <field name="customer_id" string="Customer" readonly="1" />
+              <field name="payment_id" readonly="1"/>
+              <field name="payment_tid" readonly="1"/>
+              <field name="comment" string="Comment" attrs="{'invisible': [('manual_match', '=', False),('auto_match','=',False)],'required': [('manual_match', '=', True)]}" readonly="1"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    
+    <!-- Removing Readonly Attribute To AGS Manager Group -->
+    <record id="inherited_view_ags_trans_form" model="ir.ui.view">
+      <field name="name">ags.transaction.form.inherited</field>
+      <field name="model">ags_transaction.ags_transaction</field>
+      <field name="inherit_id" ref="ags_transaction.ags_transaction_form_view"/>
+      <field name="groups_id" eval="[(6,0,[ref('ags_transaction.group_ags_manager')])]"/>
+      <field name="arch" type="xml">
+        <field name="tran_id" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="manual_match" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="is_irregular_trans" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="volume" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="amount" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="netamount" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="transaction_date" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="mop_type" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="state" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="order_relation" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="order_date" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="bill_amt" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="responsible_person" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="bill_no" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="comment" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="product" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="pump" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="nozzle" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="start_tot" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+        <field name="end_tot" position="attributes">
+            <attribute name="readonly">False</attribute>
+        </field>
+      </field>
+    </record>
+    
+    <record id="view_ags_transaction_filter" model="ir.ui.view">
+      <field name="name">ags_transaction.ags_transaction.select</field>
+      <field name="model">ags_transaction.ags_transaction</field>
+      <field name="arch" type="xml">
+        <search string="Search Transactions Order">
+          <filter name ="credit" string="Credit" domain="[('trans_type','=','credit')]"/>
+          <filter name="card"  string="Card" domain="[('trans_type','=','card')]"/>
+          <filter name="test" string="Test" domain="[('trans_type','=','test')]"/>
+          <filter name="matched" string="Matched" domain="[('state','=','matched')]"/>
+          <filter name="pending" string="Pending" domain="[('state','=','pending')]"/>
+        </search>
+      </field>
+    </record>
+    <record id="view_ags_transaction_tree" model="ir.ui.view">
+      <field name="name">ags_transaction.ags_transaction.tree</field>
+      <field name="model">ags_transaction.ags_transaction</field>
+      <field name="arch" type="xml">
+        <tree string="Transactions"  decoration-success="state=='matched'" decoration-danger="state=='no_match'" decoration-warning="state=='pending'" decoration-info="state=='new'">
+          <field name="tran_id"/>
+          <field name="pump"/>
+          <field name="nozzle"/>
+          <field name="product"/>
+          <field name="volume" />
+          <field name="amount"/>
+          <field name="netamount" />
+          <field name="order_relation" />
+          <field name="transaction_date" string="Dispensed Date"/>
+          <field name="order_date" string="Billed Date" />
+          <field name="time_delay" />
+          <field name="state" invisible="1"/>
+        </tree>
+      </field>
+    </record>
+    <record id="view_ags_transaction_kanban" model="ir.ui.view">
+      <field name="name">ags_transaction.ags_transaction.kanban</field>
+      <field name="model">ags_transaction.ags_transaction</field>
+      <field name="arch" type="xml">
+        <kanban class="o_kanban_mobile">
+          <field name="tran_id"/>
+          <field name="volume"/>
+          <field name="product"/>
+          <field name="amount"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div t-attf-class="oe_kanban_global_click">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <strong>
+                      <t t-esc="record.tran_id.value"/>
+                    </strong>
+                  </div>
+                </div>
+                <ul>
+                  <li>
+                    Product: 
+                    <field name="product"></field>
+                  </li>
+                  <li>
+                    <b>
+                      Quantity: 
+                      <field name="volume"></field>
+                    </b>
+                  </li>
+                  <li>
+                    <b>
+                      Amount: 
+                      <field name="amount"></field>
+                    </b>
+                  </li>
+                </ul>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+    <record id="live_view" model="ir.actions.client">
+      <field name="name">LiveView</field>
+      <field name="tag">live_view</field>
+      <field name="target">main</field>
+      <field name="context" eval="{'live':'True'}" />
+    </record>
+    <record id="product_view_ags_form_inherit" model="ir.ui.view">
+      <field name="name">product.form.ags</field>
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="product.product_template_form_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='to_weight']" position="before">
+          <field name="ags_product"/>
+        </xpath>
+      </field>
+    </record>
+    <menuitem name="AGS" id="menu_ags"  parent="point_of_sale.menu_point_of_sale" sequence="22"/>
+    <menuitem name="Transactions" id="menu_ags_transaction"  parent="menu_ags" action="action_ags_transaction" sequence="0"/>
+    <menuitem name="Live Comparision" id="menu_live_view" action="live_view" parent="menu_ags"  sequence="1"/>
+  </data>
+</odoo>
